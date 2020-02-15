@@ -32,7 +32,7 @@
 
 
 
-	<script type="text/javascript">
+    <script type="text/javascript">
 	/********** Below code is taken and modified for the layout maximize button*/
 	/*// a var is required because this page utilizes: myLayout.allowOverflow() method*/
 	var myLayout; 
@@ -144,7 +144,7 @@
 			.bindButton('#toggleAllPanes', 'toggle', 'east')
 
  	});
-</script>
+    </script>
     <style type="text/css">
 	/**
 	 *	Basic Layout Theme
@@ -276,11 +276,6 @@
 		<div  id="galaxy">
 				<button id="toggleAllPanes" style="position:fixed">&#x271A;</button>			
 				<h2 id= "galaxy_heading" class="header_font"> Overview of score glyphs for Furosemide </h2>
-				<!-- <div id="button-wrap" style="float:left; margin-left:50px">
-				<span style="float:left; margin: 10px 20px 10px 0px;"> Sort By: </span>
-					<div id="name" class="button active"  value ="name">NAME</div>
-					<div id="count" class="button" value="rank">RANK</div>
-				</div>		 -->
                 <div id="vis"></div>
        </div>              
 </div>
@@ -291,7 +286,6 @@
 <script src="scripts/zoom.js"></script>
 <script src="scripts/glyph.js"></script>
 <script>
-   
   var main_drug_radius = 5;
   var known_r = 3;
   var unknown_r = 6;
@@ -345,16 +339,15 @@ g.selectAll("rect")
     return d;
   }))
   .enter().insert("rect", ".tick")
-    .attr("height", 20)
-    .attr("width", 45)
-    .attr("x", function(d,i) { //console.log(i); 
+  .attr("height", 20)
+  .attr("width", 45)
+  .attr("x", function(d,i) { //console.log(i); 
     	return i*45; })
-    .attr("fill", function(d) { return threshold(d[0]); });
+  .attr("fill", function(d) { return threshold(d[0]); });
 
 	/*############### Legend for the DME #################*/          
-
-	var formatPercent = d3.format(".0%"),
-    formatNumber = d3.format(".0f");
+var formatPercent = d3.format(".0%"),
+formatNumber = d3.format(".0f");
 
 var sev_threshold = d3.scale.quantize()
     // .domain([0.11, 0.22, 0.33, 0.50])
@@ -370,22 +363,19 @@ sev_g.select(".domain")
 
         
 sev_g.selectAll("rect")
-  .data(sev_threshold.range().map(function(color) {
-    var d = sev_threshold.invertExtent(color);
-    return d;
-  }))
-  .enter().insert("rect", ".tick")
+     .data(sev_threshold.range().map(function(color) {
+   	 var d = sev_threshold.invertExtent(color);
+   	 return d;
+     }))
+    .enter().insert("rect", ".tick")
     .attr("height", 20)
     .attr("width", 30)
     .attr("x", function(d,i) { //console.log(i); 
     	return i*30; })
     .attr("fill", function(d,i) { 
-		if (i===0 || i===5 || i===4 || i===1)
-			return sev_threshold(d[0])
-		else
-		return '#0a0a67'
-		; 
-	});           
+		if (i===0 || i===5 || i===4 || i===1) return sev_threshold(d[0])
+		else return '#0a0a67'
+     });           
 
   </script>
 
