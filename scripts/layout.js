@@ -2,6 +2,10 @@
 
 var myLayout; 
 
+$(window).load(function() {
+    createHeaderMenu();
+});
+
 $(document).ready(function () {
     myLayout = $('body').layout({
         south:{size:150},
@@ -14,9 +18,8 @@ $(document).ready(function () {
     myLayout
         .bindButton('#toggleAllPanes', 'toggle', 'west')
         .bindButton('#toggleAllPanes', 'toggle', 'east')
-        
-    createHeaderMenu()
  });
+
 
 function toggleMaximize ( paneName, cbPane ) {
     var	pane		= cbPane || paneName
@@ -177,13 +180,9 @@ function createHeaderMenu(){
 
     var sev_g = d3.select("#legend_svg_severity").append("g")
 
-
     sev_g.select("g").call(xAxis)
     sev_g.select(".domain")
          .remove();
-
-
-        
     sev_g.selectAll("rect")
         .data(sev_threshold.range().map(function(color) {
         var d = sev_threshold.invertExtent(color);

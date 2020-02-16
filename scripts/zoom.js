@@ -1,9 +1,22 @@
 /*code to build the overview --- the network diagram*/
-
+// var obj = {};
+// var drugs_list = [];
+// var matrix=null, nodes =null;
+// var search_drug=null;
+// var filter_rb_val = 'both' ;
+// var overall_data=null;
+// var link_distance = 50;
+// var selected_node = null;
+// var selected_interaction=null;
+// var selected_Score = null;
+// var menu_selection=null;
+// var DME_LIST=[];
+// var reportsCount=0;
+// var rules_data =null, reports_data=null;
 var obj = {};
 var drugs_list = [];
-var matrix=null, nodes =null;
-var search_drug=null;
+var matrix, nodes;
+var search_drug;
 var filter_rb_val = 'both' ;
 var overall_data=null;
 var link_distance = 50;
@@ -12,8 +25,7 @@ var selected_interaction=null;
 var selected_Score = null;
 var menu_selection=null;
 var DME_LIST=[];
-var reportsCount=0;
-var rules_data =null, reports_data=null;
+var rules_data, reports_data, reportsCount;
 var assigned_drugs= ['lansoprazole', 'byetta', 'ondansetron', 'omeprazole', 'fluororasil', 'metformin', 'abilify', 'victoza', 'zometa', 'furosemide','lantus', 'atorvastatin','humira', 'dexamethasone', 'simavastatin'];
 
 /*tooltip on mousover, used throughtout*/
@@ -21,8 +33,20 @@ var div = d3.select("body")
             .append("div")
             .attr("class", "toolTip");
 
+// console.log(div)
+
+/* mouseover for the filter menu*/   
+function mouseOverText(event, text){
+    // console.log(text)
+    div.style("left", d3.event.pageX+"px");
+    div.style("top",  d3.event.pageY+"px");
+    div.style("display", "inline-block");
+    div.html(text)
+}
+
 d3.select("#reset_button")
     .on("click", function(){
+      console.log("clicked")
       selected_drugs = [];
       d3.selectAll("#div_graph > svg").remove();
       d3.selectAll("#div_profile > svg").remove();
@@ -76,7 +100,8 @@ d3.selectAll("#drugs_menu").on("change",function(event) {
 /* WHEN MOUSE OVER ON THE DRUGS MENU, DISPLAY tooltip TEXT*/
 d3.selectAll("#drugs_menu")
     .on("mousemove",function(event) {
-        mouseOverText(event, "Select a drug to view its interactions")
+        console.log("move")
+        mouseOverText(event, "Select a drug to view its interactions (DIARs)")
     })
     /*WHEN MOUSE out then remove the tooltip text*/        
     .on("mouseout", function(d){
@@ -92,7 +117,7 @@ d3.select('#search_txbox')
                 prepare_data (filter_rb_val)
     })
     .on("mousemove", function(event){
-        mouseOverText(event, "Search a drugname to see its interactions")
+        mouseOverText(event, "Search a drugname to see its interactions (DIARs)")
     })
     .on("mouseout", function(d){
         div.style("display", "none");
@@ -106,21 +131,12 @@ d3.select("#nScore")
         prepare_data(+this.value);
     })
     .on("mousemove", function(event){
-        mouseOverText(event, "Change the score to filter interactions")
+        mouseOverText(event, "Change the score to filter interactions (DIARs)")
     })
     .on("mouseout", function(d){
         div.style("display", "none");
     });
     
-
-/* mouseover for the filter menu*/   
-function mouseOverText(event, text){
-    div.style("left", d3.event.pageX+"px");
-    div.style("top", d3.event.pageY+"px");
-    div.style("display", "inline-block");
-    div.html(text)
-}
-
 /* prepare data and check for any of the filters and update accordingly*/  
 function prepare_data(status_val){
 	var overall = [], search_overall = [];
@@ -832,7 +848,7 @@ function prepare_profile(drugname, check){
           }
     })
     .on("mousemove",function(event) {
-    mouseOverText(event, "Filter the type of interactions you want")
+    mouseOverText(event, "Filter the type of interactions (DIARs) you want")
     })
     /*WHEN MOUSE out then remove the tooltip text*/        
     .on("mouseout", function(d){
