@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>MEDIAR</title>
-    <LINK type="text/css" rel="stylesheet" href="styles/layout-default-latest.css" />
 
+    <link type="text/css" rel="stylesheet" href="styles/layout-default-latest.css" />
     <link rel="stylesheet"  type="text/css"  href="lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/zoom_style.css"/>
 	
     <script type="text/javascript" src="lib/jquery.js"></script>
     <script type="text/javascript" src="lib/math.js"></script>
@@ -16,25 +18,20 @@
     <script type="text/javascript" src="lib/jquery-latest.js"></script>
     <script type="text/javascript" src="lib/jquery-ui-latest.js"></script>
     <script type="text/javascript" src="lib/jquery.layout-1.3.0.rc30.80.js"></script>
-
-
-    <link rel="stylesheet" type="text/css" href="styles/style.css"/>
-    <link rel="stylesheet" type="text/css" href="styles/zoom_style.css"/>
-    <link rel="stylesheet" type="text/css" href="styles/galaxy_style.css"/>
-
     <script type="text/javascript" src="lib/d3.min.js"></script>
     <script type="text/javascript" src="lib/d3-ForceEdgeBundling.js"></script>
     <script type="text/javascript" src="lib/isotope.pkgd.min.js"></script>
     <script type="text/javascript" src="lib/queue.min.js"></script>
     <script type="text/javascript" src="https://rawgit.com/marcj/css-element-queries/master/src/ResizeSensor.js"></script>
     <script type="text/javascript" src="https://rawgit.com/marcj/css-element-queries/master/src/ElementQueries.js"></script>
-    <!-- <script type="text/javascript"src="https://d3js.org/d3.v4.min.js"></script> -->
 
-
-	<script type="text/javascript" src="scripts/layout.js"></script>
+    <script type="text/javascript" src="scripts/layout.js"></script>
+    <script type="text/javascript" src="scripts/zoom.js"></script>
+    <script type="text/javascript" src="scripts/glyph.js"></script>
 </head>
-<body>
+
 <!-- below ui-layouts sets each of the panel and its buttons -->
+<body>
 	<div class="ui-layout-north">
 		<div id="headerWrapper">
 			<div id= "selection_menu" class="headerBoxes" style="background-color:transparent;">  		
@@ -43,16 +40,14 @@
 					<button id ="reset_button" type="button">Reset</button>
 				</div>
 					<select multiple id="drugs_menu"> </select>
-			</div>	                  
+			</div>	<!-- end selection menu -->                  
 
-			<!-- <div style="float:left">  -->
 			<div class="headerBoxes">
-				<p class= "white_color" style= "-webkit-margin-after:0px !important;-webkit-margin-before:0px !important; margin-left:5px;"> Filter DDIs:  </p>	
+				  <p class= "white_color" style= "-webkit-margin-after:0px !important;-webkit-margin-before:0px !important; margin-left:5px;"> Filter DDIs:  </p>	
 					<input  type="radio" name="filter" value="known"> <label for="option">Known DIARs</label> <br>
 					<input  type="radio" name="filter" value="unknown"><label for="option">Unknown DIARs</label> <br>
 					<input  type="radio" name="filter" value="both" checked="true"><label for="option">Both</label>   <br>
 			</div>
-			<!-- style= "float:left; width:200px; margin-right:10px;padding:10px;"" -->
 			<div class="headerBoxes">
 					<p style= "-webkit-margin-after:0px !important; -webkit-margin-before:0px !important">
 					<label class= "white_color" for="nRadius" 
@@ -62,7 +57,7 @@
 					<input class= "white_color" type="range" min="-0.1" max="0.7" step="0.01" value="0.6" id="nScore">
 					<div class="headerLegend">  <span class= "white_color" style="float:left;">min</span>  <span style="float:right; padding-right:40px">max </span> </div>
 					</p>
-				&nbsp;
+				  &nbsp;
 			</div>	
 
 			<div class="headerBoxes">
@@ -71,10 +66,6 @@
 				<input  type="radio" name="score_filter" value="unknown"> Confidence <br>
 				<input  type="radio" name="score_filter" value="both" checked="true" > Reporting Ratio <br>
 			</div>
-
-			<!-- <div id="div_legends" class="headerBoxes" style=" border:0px solid #fff;">
-				<div id="legend" class = "div_outline">  </div>
-			</div>  -->
 
 			<div class="headerBoxes legendBoxes">
 				<svg id="legend_svg" height="20" width="195"></svg>
@@ -86,133 +77,37 @@
 				<div class="headerLegend"> <span style="float:left">DDI Conf</span> 
 					 <span style="float:right">Drug Conf </span> 
 				</div>
-
-			</div>	
+			</div>	<!--end legendBoxes -->  
 			<div class="headerBoxes">
 				Search: <input id="search_txbox" type="text" name="Search" value="Search"  onfocus="if (this.value == 'Search') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search';}" ><br> 
 			</div>	
-		</div>			
-	</div>
+		</div>	<!-- end headerWrapper -->  		
+	</div>  <!-- end ui-layout-north -->  
 
 
-	<!-- allowOverflow auto-attached by option: west__showOverflowOnHover = true -->
-	<div id = "div_graph" class="ui-layout-west">
-		<button id="max_overivew" onclick="toggleMaximize('west')" style="position:fixed;"> &#x271A;</button>
-		<h2 class="header_font"> Overview of all DDIs </h2>
-	</div>
+    <!-- allowOverflow auto-attached by option: west__showOverflowOnHover = true -->
+  <div id = "div_graph" class="ui-layout-west">
+    <button id="max_overivew" onclick="toggleMaximize('west')" style="position:fixed;"> &#x271A;</button>
+    <h2 class="header_font"> Overview of all DDIs </h2>
+  </div>
 
-<div class="ui-layout-east">
-      <div id = "div_table">
-        <button onclick="myLayout.toggle('east')"  style="position:fixed;">&#x2716;</button>
-        <button id="view_reports" onclick="toggleMaximize('east')" style="position:fixed;" >&#x271A;</button>
-        <h2 id= "report_heading" class="header_font"> </h2>
-     </div>
-</div>
+  <div class="ui-layout-east">
+        <div id = "div_table">
+          <button onclick="myLayout.toggle('east')"  style="position:fixed;">&#x2716;</button>
+          <button id="view_reports" onclick="toggleMaximize('east')" style="position:fixed;" >&#x271A;</button>
+          <h2 id= "report_heading" class="header_font"> </h2>
+      </div>
+  </div>
 
-<div class="ui-layout-center">
-		<div  id="galaxy">
-				<button id="toggleAllPanes" style="position:fixed">&#x271A;</button>			
-				<h2 id= "galaxy_heading" class="header_font"> Overview of score glyphs for Furosemide </h2>
-                <div id="vis"></div>
-       </div>              
-</div>
+  <div class="ui-layout-center">
+      <div  id="galaxy">
+          <button id="toggleAllPanes" style="position:fixed">&#x271A;</button>			
+          <h2 id= "galaxy_heading" class="header_font"> Overview of score glyphs for Furosemide </h2>
+                  <div id="vis"></div>
+        </div>              
+  </div>
 
 </body>
 </html>
 
-<script src="scripts/zoom.js"></script>
-<script src="scripts/glyph.js"></script>
-<script>
-  var main_drug_radius = 5;
-  var known_r = 3;
-  var unknown_r = 6;
-  var main_drug_color=  "#2196f3"  ;//"green"
-  var default_link_color = '#FAEBD7'; //'#fe9929'
-
-  var min_score = -0.1;
-  var max_score = 1;
-
-   /*color comain for the legends*/
-  var color = d3.scale.linear()
-                  .domain([min_score, (min_score+max_score)/2, max_score])
-                  // .range(["#fcae91","#de2d26", "#a50f15"]);
-                  .range(["hsl(0, 100%, 80%)", "hsl(0, 100%, 64%)","hsl(0, 100%, 25%)"]);
-                  // .range(["#fee0d2","#fc9272", "#de2d26"]);
-                  // .range(["grey", "#fb6a4a", "red"]);
-                  // .range(["#cb181d","#fcae91","#fee5d9"])  
-
-
-  var color_severity = d3.scale.linear()
-                          .domain([0,1,5])
-                          // .range(["#fed98e", "#a6bddb", "#2b8cbe"]);
-                          .range(["#fed98e", '#a3a3c2', '#666699']);
-
-  var threshold = d3.scale.quantize()
-    .domain([-0.1, 0, 1,0.01, 0.1])
-    .range(["#fecc5c", "#fd8d3c", "#f03b20", "#800000"]);
-
-  var x = d3.scale.linear()
-    .domain([0, 1])
-    .range([0, 240]);
-
-  var xAxis = d3.svg.axis()
-			  .orient("bottom")
-			  .tickSize(13)
-			  .tickValues(threshold.domain())
-			  .tickFormat(function(d) { return d === 0.5 ? formatPercent(d) : formatNumber(100 * d); });
-
-  var g = d3.select("#legend_svg").append("g")
-
-
-  g.select("g").call(xAxis)
-  g.select(".domain")
-   .remove();
-
-
-        
-g.selectAll("rect")
-  .data(threshold.range().map(function(color) {
-    var d = threshold.invertExtent(color);
-    return d;
-  }))
-  .enter().insert("rect", ".tick")
-  .attr("height", 20)
-  .attr("width", 45)
-  .attr("x", function(d,i) { //console.log(i); 
-    	return i*45; })
-  .attr("fill", function(d) { return threshold(d[0]); });
-
-	/*############### Legend for the DME #################*/          
-var formatPercent = d3.format(".0%"),
-formatNumber = d3.format(".0f");
-
-var sev_threshold = d3.scale.quantize()
-    // .domain([0.11, 0.22, 0.33, 0.50])
-    .range(["#016c59", '#016c59', '', '', '#d0d1e6','#d0d1e6']);
-
-var sev_g = d3.select("#legend_svg_severity").append("g")
-
-
-sev_g.select("g").call(xAxis)
-sev_g.select(".domain")
-    .remove();
-
-
-        
-sev_g.selectAll("rect")
-     .data(sev_threshold.range().map(function(color) {
-   	 var d = sev_threshold.invertExtent(color);
-   	 return d;
-     }))
-    .enter().insert("rect", ".tick")
-    .attr("height", 20)
-    .attr("width", 30)
-    .attr("x", function(d,i) { //console.log(i); 
-    	return i*30; })
-    .attr("fill", function(d,i) { 
-		if (i===0 || i===5 || i===4 || i===1) return sev_threshold(d[0])
-		else return '#0a0a67'
-     });           
-
-  </script>
 

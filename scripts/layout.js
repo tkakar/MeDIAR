@@ -1,4 +1,22 @@
+//******* This code sets the layout of the interface ****** ///
+
 var myLayout; 
+
+$(document).ready(function () {
+    myLayout = $('body').layout({
+        south:{size:150},
+        north__resizable: false
+        // ,south:{state:close}
+        ,onresizeall:  function (Instance, state) { toggleMaximize( state.container.maximizedPane ); }
+    });
+    myLayout.close("south")
+
+    myLayout
+        .bindButton('#toggleAllPanes', 'toggle', 'west')
+        .bindButton('#toggleAllPanes', 'toggle', 'east')
+        
+    createHeaderMenu()
+ });
 
 function toggleMaximize ( paneName, cbPane ) {
     var	pane		= cbPane || paneName
@@ -93,17 +111,93 @@ function toggleMaximize ( paneName, cbPane ) {
     }
 };
 
-$(document).ready(function () {
-    myLayout = $('body').layout({
-        south:{size:150},
-        north__resizable: false
-        // ,south:{state:close}
-        ,onresizeall:  function (Instance, state) { toggleMaximize( state.container.maximizedPane ); }
-    });
-    myLayout.close("south")
 
-    myLayout
-        .bindButton('#toggleAllPanes', 'toggle', 'west')
-        .bindButton('#toggleAllPanes', 'toggle', 'east')
 
- });
+function createHeaderMenu(){
+    var main_drug_radius = 5;
+    var known_r = 3;
+    var unknown_r = 6;
+    var main_drug_color=  "#2196f3"  ;//"green"
+    var default_link_color = '#FAEBD7'; //'#fe9929'
+
+    var min_score = -0.1;
+    var max_score = 1;
+
+    /*color comain for the legends*/
+    var color = d3.scale.linear()
+                    .domain([min_score, (min_score+max_score)/2, max_score])
+                    .range(["hsl(0, 100%, 80%)", "hsl(0, 100%, 64%)","hsl(0, 100%, 25%)"]); 
+
+
+    var color_severity = d3.scale.linear()
+                            .domain([0,1,5])
+                            .range(["#fed98e", '#a3a3c2', '#666699']);
+
+    var threshold = d3.scale.quantize()
+    .domain([-0.1, 0, 1,0.01, 0.1])
+    .range(["#fecc5c", "#fd8d3c", "#f03b20", "#800000"]);
+
+    var x = d3.scale.linear()
+    .domain([0, 1])
+    .range([0, 240]);
+
+    var xAxis = d3.svg.axis()
+                .orient("bottom")
+                .tickSize(13)
+                .tickValues(threshold.domain())
+                .tickFormat(function(d) { return d === 0.5 ? formatPercent(d) : formatNumber(100 * d); });
+
+    var g = d3.select("#legend_svg").append("g")
+
+
+    g.select("g").call(xAxis)
+    g.select(".domain")
+    .remove();
+
+
+        
+    g.selectAll("rect")
+    .data(threshold.range().map(function(color) {
+    var d = threshold.invertExtent(color);
+    return d;
+    }))
+    .enter().insert("rect", ".tick")
+    .attr("height", 20)
+    .attr("width", 45)
+    .attr("x", function(d,i) { //console.log(i); 
+        return i*45; })
+    .attr("fill", function(d) { return threshold(d[0]); });
+
+    /*############### Legend for the DME #################*/          
+    var formatPercent = d3.format(".0%"),
+    formatNumber = d3.format(".0f");
+
+    var sev_threshold = d3.scale.quantize()
+                          .range(["#016c59", '#016c59', '', '', '#d0d1e6','#d0d1e6']);
+
+    var sev_g = d3.select("#legend_svg_severity").append("g")
+
+
+    sev_g.select("g").call(xAxis)
+    sev_g.select(".domain")
+         .remove();
+
+
+        
+    sev_g.selectAll("rect")
+        .data(sev_threshold.range().map(function(color) {
+        var d = sev_threshold.invertExtent(color);
+        return d;
+        }))
+    .enter().insert("rect", ".tick")
+    .attr("height", 20)
+    .attr("width", 30)
+    .attr("x", function(d,i) { //console.log(i); 
+        return i*30; })
+    .attr("fill", function(d,i) { 
+        if (i===0 || i===5 || i===4 || i===1) return sev_threshold(d[0])
+        else return '#0a0a67'
+        }); 
+
+}
+ 

@@ -1,8 +1,9 @@
 /*code to build the overview --- the network diagram*/
+
 var obj = {};
 var drugs_list = [];
-var matrix, nodes;
-var search_drug;
+var matrix=null, nodes =null;
+var search_drug=null;
 var filter_rb_val = 'both' ;
 var overall_data=null;
 var link_distance = 50;
@@ -11,8 +12,8 @@ var selected_interaction=null;
 var selected_Score = null;
 var menu_selection=null;
 var DME_LIST=[];
-var reportsCount;
-var rules_data, reports_data;
+var reportsCount=0;
+var rules_data =null, reports_data=null;
 var assigned_drugs= ['lansoprazole', 'byetta', 'ondansetron', 'omeprazole', 'fluororasil', 'metformin', 'abilify', 'victoza', 'zometa', 'furosemide','lantus', 'atorvastatin','humira', 'dexamethasone', 'simavastatin'];
 
 /*tooltip on mousover, used throughtout*/
@@ -41,13 +42,12 @@ d3.select("#reset_button")
     });
 
   
-/*When the drugs are selected from menu, the data changes and so all the visualizations are updated for the new data*/
+/*When the drugs are selected from menu, the data changes and all the visualizations are updated for the new data*/
 d3.selectAll("#drugs_menu").on("change",function(event) {
   		    var selected_drugs=[]
             d3.selectAll("#vis *").remove();
             d3.selectAll("#pinned_graphs *").remove();
             d3.select(this).selectAll("option").filter(function (d, i) { if (this.selected) selected_drugs.push (this.value); return this.selected; });
-
 			 var sel_overall =[];
 			 drugs_list = [];
                 	// console.log(search_drug, data)
@@ -60,22 +60,20 @@ d3.selectAll("#drugs_menu").on("change",function(event) {
                 				} 
                 			}
                 	})
-
          d3.selectAll("#div_graph > svg").remove();
          var drugs_list_no_duplicates = remove_duplicates(drugs_list)
          drugs_list=[];
-         
          createAdjacencyMatrix (drugs_list_no_duplicates, JSON.parse(JSON.stringify(sel_overall)));
          prepare_profile(selected_drugs[0], "node")
          prepare_reports(selected_drugs[0], "drug")
          read_glyph_data(selected_drugs[0], "drug")
          d3.select("#report_heading").text("Reports for selected Drug " + selected_drugs[0] + ": " + reportsCount);
          d3.select("#galaxy_heading").text("Score Glyphs for the selected Drug: " + selected_node);
-})  
-          /*end menu change*/ 
+})   /*end menu change*/ 
+         
 
 
-  /*WHEN MOUSE OVER ON THE DRUGS MENU, DISPLAY tooltip TEXT*/
+/* WHEN MOUSE OVER ON THE DRUGS MENU, DISPLAY tooltip TEXT*/
 d3.selectAll("#drugs_menu")
     .on("mousemove",function(event) {
         mouseOverText(event, "Select a drug to view its interactions")
@@ -85,7 +83,7 @@ d3.selectAll("#drugs_menu")
                 div.style("display", "none");
     });
 
-/*when a value is searched in the search box*/
+/* when a value is searched in the search box*/
 d3.select('#search_txbox')
     .on('change', function() {
             d3.selectAll("#div_graph > svg").remove();
@@ -100,7 +98,7 @@ d3.select('#search_txbox')
         div.style("display", "none");
     });
 
-/*update data when the Score slider is moved*/
+/* update data when the Score slider is moved*/
 d3.select("#nScore")
    .on("input", function() {
         d3.selectAll("#div_graph > svg").remove();
@@ -115,7 +113,7 @@ d3.select("#nScore")
     });
     
 
-/*mouseover for the filter menu*/   
+/* mouseover for the filter menu*/   
 function mouseOverText(event, text){
     div.style("left", d3.event.pageX+"px");
     div.style("top", d3.event.pageY+"px");
@@ -123,7 +121,7 @@ function mouseOverText(event, text){
     div.html(text)
 }
 
-/*prepare data and check for any of the filters and update accordingly*/  
+/* prepare data and check for any of the filters and update accordingly*/  
 function prepare_data(status_val){
 	var overall = [], search_overall = [];
 	 d3.text("data/Q4_2014_rules_new.txt", function(unparsedData)
@@ -195,7 +193,7 @@ function prepare_data(status_val){
 	
 }
 
-  /*this function sets the data if it is for the assigned drugs or just one search drugs or all data*/
+/*this function sets the data if it is for the assigned drugs or just one search drugs or all data*/
 function set_data(data){
 	var search_flag=0
 	overall_data = data 
@@ -249,7 +247,7 @@ function set_data(data){
         createAdjacencyMatrix (drugs_list_no_duplicates, JSON.parse(JSON.stringify(sel_overall)));
     }
          drugs_list=[];
-	}
+}
 
 
 /*this function bulids the network diagram, by first converting the data into a form accepted by force layout */

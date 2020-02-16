@@ -73,7 +73,6 @@ line-height: normal;
         height:100%;
 }
 
-
 .toolTip {
     position: absolute;
     display: none;
@@ -89,14 +88,10 @@ line-height: normal;
     text-align: center;
     z-index: 1000;
 }
-
 .underline {
     text-align: center;
     text-decoration: underline;
 }
-
-
-
 
 div#side_bar{
     float:left;
@@ -122,7 +117,6 @@ div#side_bar{
 .right_align{
         float: right;
 }
-
 
 #buttons_id{
     background-color:#b8b894 ;
@@ -182,8 +176,6 @@ https://www.google.com/fonts/specimen/Monda */
 /* .headerBoxes{
     text-align: center;
 } */
-
-
 
 ul.menu {
 
