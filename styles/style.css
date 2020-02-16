@@ -179,6 +179,11 @@ https://www.google.com/fonts/specimen/Monda */
     width: 800px;
 }
 
+/* .headerBoxes{
+    text-align: center;
+} */
+
+
 
 ul.menu {
 
@@ -276,6 +281,56 @@ h2{
     width: 180px;
 }
 
+.ui-layout-pane { /* all 'panes' */ 
+    background: #FFF; 
+    border: 1px solid #BBB; 
+    padding: 10px; 
+    overflow: auto;
+} 
+
+.ui-layout-resizer { /* all 'resizer-bars' */ 
+    background: #0a0a67; 
+} 
+
+.ui-layout-toggler-hover { /* all 'resizer-bars' */ 
+    background: #016c59!important;
+} 
+
+.ui-layout-toggler { /* all 'toggler-buttons' */ 
+    background: #AAA; 
+} 
+/* !important is used to override any parental properies or properties defined in some other css*/
+.ui-layout-north{
+    background-color: #0a0a67;
+    z-index:100 !important;
+    visibility: visible !important;
+    color:white !important;
+    height: 80px;
+    overflow: hidden !important;
+    font-size: 16px !important ;
+}
+
+#headerWrapper{
+    display: flex;
+      align-items: stretch;
+}
+
+.headerBoxes{
+    flex:1;
+    margin-right:10px;
+    padding:10px; 
+}
+
+.legendBoxes{
+    /* text-align: center; */
+
+}
+
+.headerLegend{
+    text-align:center;
+    width: 180px;
+    padding: 0 40px 0 0px;
+}
 
 
 

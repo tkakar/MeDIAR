@@ -11,28 +11,37 @@ var selected_interaction=null;
 var selected_Score = null;
 var menu_selection=null;
 var DME_LIST=[];
+var reportsCount;
 var rules_data, reports_data;
 var assigned_drugs= ['lansoprazole', 'byetta', 'ondansetron', 'omeprazole', 'fluororasil', 'metformin', 'abilify', 'victoza', 'zometa', 'furosemide','lantus', 'atorvastatin','humira', 'dexamethasone', 'simavastatin'];
 
 /*tooltip on mousover, used throughtout*/
 var div = d3.select("body")
-          .append("div")
-          .attr("class", "toolTip");
+            .append("div")
+            .attr("class", "toolTip");
 
-d3.select("#reset_button").on("click", function(){
+d3.select("#reset_button")
+    .on("click", function(){
       selected_drugs = [];
       d3.selectAll("#div_graph > svg").remove();
       d3.selectAll("#div_profile > svg").remove();
       d3.selectAll("#vis > svg").remove();
-      d3.selectAll("#div_table > *").remove();
+      d3.selectAll("#div_table > table").remove();
       prepare_data();
       prepare_profile("furosemide","node")
       prepare_reports("furosemide", "drug")
       read_glyph_data("furosemide", "drug")
-})
+    })
+    .on("mousemove",function(event) {
+        mouseOverText(event, "Resets any drug selection filters, reloads the whole views")
+    })
+    /*WHEN MOUSE out then remove the tooltip text*/        
+    .on("mouseout", function(d){
+                div.style("display", "none");
+    });
 
   
-/*when the drugs are selected from menu, the data changes and so all the visualizations are updated for the new data*/
+/*When the drugs are selected from menu, the data changes and so all the visualizations are updated for the new data*/
 d3.selectAll("#drugs_menu").on("change",function(event) {
   		    var selected_drugs=[]
             d3.selectAll("#vis *").remove();
@@ -60,42 +69,60 @@ d3.selectAll("#drugs_menu").on("change",function(event) {
          prepare_profile(selected_drugs[0], "node")
          prepare_reports(selected_drugs[0], "drug")
          read_glyph_data(selected_drugs[0], "drug")
-         d3.select("#report_heading").text("Reports for selected Drug: " + selected_drugs[0]);
+         d3.select("#report_heading").text("Reports for selected Drug " + selected_drugs[0] + ": " + reportsCount);
          d3.select("#galaxy_heading").text("Score Glyphs for the selected Drug: " + selected_node);
 })  
           /*end menu change*/ 
 
 
   /*WHEN MOUSE OVER ON THE DRUGS MENU, DISPLAY tooltip TEXT*/
-d3.selectAll("#drugs_menu").on("mousemove",function(event) {
-            div.style("left", d3.event.pageX+"px");
-            div.style("top", d3.event.pageY+"px");
-            div.style("display", "inline-block");
-            div.html("Click Drug Interactions")
-           
-})
+d3.selectAll("#drugs_menu")
+    .on("mousemove",function(event) {
+        mouseOverText(event, "Select a drug to view its interactions")
+    })
     /*WHEN MOUSE out then remove the tooltip text*/        
-.on("mouseout", function(d){
-            div.style("display", "none");
-});
+    .on("mouseout", function(d){
+                div.style("display", "none");
+    });
 
 /*when a value is searched in the search box*/
-d3.select('#search_txbox').on('change', function() {
-		 d3.selectAll("#div_graph > svg").remove();
-		 link_distance = 100;
-	    // d3.select("h2").text("Graphs for searched Drug: " + this.value);
-	    	search_drug = this.value
-	    	prepare_data (filter_rb_val)
-});
+d3.select('#search_txbox')
+    .on('change', function() {
+            d3.selectAll("#div_graph > svg").remove();
+            link_distance = 100;
+            search_drug=this.value.toLowerCase()
+                prepare_data (filter_rb_val)
+    })
+    .on("mousemove", function(event){
+        mouseOverText(event, "Search a drugname to see its interactions")
+    })
+    .on("mouseout", function(d){
+        div.style("display", "none");
+    });
 
 /*update data when the Score slider is moved*/
-d3.select("#nScore").on("input", function() {
+d3.select("#nScore")
+   .on("input", function() {
         d3.selectAll("#div_graph > svg").remove();
         d3.select("#nScore_value").text(this.value);
-
         prepare_data(+this.value);
-});
+    })
+    .on("mousemove", function(event){
+        mouseOverText(event, "Change the score to filter interactions")
+    })
+    .on("mouseout", function(d){
+        div.style("display", "none");
+    });
     
+
+/*mouseover for the filter menu*/   
+function mouseOverText(event, text){
+    div.style("left", d3.event.pageX+"px");
+    div.style("top", d3.event.pageY+"px");
+    div.style("display", "inline-block");
+    div.html(text)
+}
+
 /*prepare data and check for any of the filters and update accordingly*/  
 function prepare_data(status_val){
 	var overall = [], search_overall = [];
@@ -270,7 +297,7 @@ function createAdjacencyMatrix (nodes_data, links){
 			
 		var force = d3.layout.force()
 		  .linkDistance(link_distance)
-		  .charge(-500)
+          .charge(-500)
 		  .size([w,h])
 
 	    var drag = d3.behavior.drag()
@@ -327,6 +354,7 @@ function createAdjacencyMatrix (nodes_data, links){
 		 });
 
 		function isConnected(a, b) {
+            // var linkedByIndex;
 			/* For actual example uncomment below line, our data has different format*/
 	        // return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
 	        return linkedByIndex[a.id + "," + b.id] || linkedByIndex[b.id + "," + a.id] || a.index == b.index;
@@ -382,17 +410,13 @@ function createAdjacencyMatrix (nodes_data, links){
                 selected_interaction = d
                 if(selected_interaction){
                     prepare_profile(selected_interaction, "link")
-                    d3.select("#report_heading").text("Reports for Interaction: " + selected_interaction.drugs[0]+ " - " + selected_interaction.drugs[1]);
+                    d3.select("#report_heading").text("Reports for Interaction (" + selected_interaction.drugs[0]+ " - " + selected_interaction.drugs[1] + ") : " + reportsCount);
                     prepare_reports(selected_interaction,"")
                 }
         
             })
             .on("mousemove", function(d){
-                    div.style("left", d3.event.pageX+10+"px");
-                    div.style("top", d3.event.pageY-25+"px");
-                    div.style("display", "inline-block");
-                    div.html("Drugs: "+ (d.source.id)+ " - " + d.target.id + "<br>"+ "ADR: " + d.ADR +"<br>"+ "Reports Count: " + d.support +"<br>"+ "Score: " + d.Score  +"<br>"+  "Status: " + d.status) 
-                    //"Support: " + (d.support) +"<br>"+ "Confidence: " + (d.Conf));
+                    mouseOverText(event, "Click the interaction to see reports and score<br> Drugs: "+ (d.source.id)+ " - " + d.target.id + "<br>"+ "ADR: " + d.ADR +"<br>"+ "Reports Count: " + d.support +"<br>"+ "Score: " + d.Score  +"<br>"+  "Status: " + d.status) 
             })
 
             .on("mouseout", function(d){
@@ -450,16 +474,13 @@ function createAdjacencyMatrix (nodes_data, links){
 
     /*mouseover a node creates a div with some information and disappears on mouseout*/
 	node.on("mouseover", function(d) {
-			set_highlight(d);
+			// set_highlight(d);
 		})
         .on("mousedown", function(d) { //d3.event.stopPropagation();
             focus_node = d;
         })
         .on("mousemove", function(d){
-            div.style("left", d3.event.pageX+10+"px");
-            div.style("top", d3.event.pageY-25+"px");
-            div.style("display", "inline-block");
-            div.html("Drugname: "+ (d.id))
+            mouseOverText(event,"Click drug "+ (d.id)+ " to filter its data" )
         })
         .on("mouseout", function(d){
             div.style("display", "none");
@@ -480,7 +501,7 @@ function createAdjacencyMatrix (nodes_data, links){
                 d3.selectAll("#pinned_graphs > *").remove()
                 read_glyph_data(selected_node, "drug")
                 prepare_reports(selected_node, "drug")
-                d3.select("#report_heading").text("Reports for selected Drug: " + selected_node);
+                d3.select("#report_heading").text("Reports for selected Drug " + selected_node + ": " + reportsCount);
                 d3.select("#galaxy_heading").text("Score Glyphs for the selected Drug: " + selected_node);
             }
         })
@@ -793,7 +814,7 @@ function prepare_profile(drugname, check){
 
  /*changes made when label is changed, calling the prepare data function, how the other filter button should look like etc*/
  d3.selectAll("input[name='filter']").on('change', function() {
-        	filter_rb_val = this.value
+          filter_rb_val = this.value
           d3.selectAll("#div_graph > svg").remove();
           var val = this.value
          
@@ -811,7 +832,15 @@ function prepare_profile(drugname, check){
           	 prepare_data();
 
           }
-});
+    })
+    .on("mousemove",function(event) {
+    mouseOverText(event, "Filter the type of interactions you want")
+    })
+    /*WHEN MOUSE out then remove the tooltip text*/        
+    .on("mouseout", function(d){
+            div.style("display", "none");
+    });
+
 
 
 /*function to match ids for interaction as well as drugs if clicked on any ones*/
@@ -821,6 +850,7 @@ function prepare_reports(d, check){
       as the reports will be different for each 
       */
       var p_id = []
+      var ddi=[];
       /*remove the existing tale*/
      	d3.selectAll("#div_table > table").remove();
 
@@ -837,6 +867,7 @@ function prepare_reports(d, check){
       /*if interaction is clicked*/
       else{
            /*if interaction is clicked, then ids are in the passes data (d) split them*/
+        //    console.log(d.drugs[0])
            p_id = d.p_id.split(",")
       }
   
@@ -857,7 +888,7 @@ function prepare_reports(d, check){
 		    .data(columns)
 		    .enter()
 		    .append("th")
-            .attr("height",25)
+            .attr("height",30)
             .text(function(column) { return column.toUpperCase(); }) 
 
       var matched_reports=[];
@@ -865,9 +896,16 @@ function prepare_reports(d, check){
                   if (p_id.toString().indexOf(d.key) !== -1){
                      matched_reports.push(d.values[0])
                   }
-	  });
-		
-        /*create a row for each object in the data*/
+      });
+      
+      reportsCount = matched_reports.length
+
+      if (check=='drug')
+            d3.select("#report_heading").text("Reports for selected Drug " + d + ": " + reportsCount);
+      else
+            d3.select("#report_heading").text("Reports for Interaction (" + d.drugs[0]+ " - " + d.drugs[1] + ") : " + reportsCount);
+
+      /*create a row for each object in the data*/
       var rows = tbody.selectAll("tr")
                       .data(matched_reports)
                       .enter()
