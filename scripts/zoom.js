@@ -1,22 +1,8 @@
 /*code to build the overview --- the network diagram*/
-// var obj = {};
-// var drugs_list = [];
-// var matrix=null, nodes =null;
-// var search_drug=null;
-// var filter_rb_val = 'both' ;
-// var overall_data=null;
-// var link_distance = 50;
-// var selected_node = null;
-// var selected_interaction=null;
-// var selected_Score = null;
-// var menu_selection=null;
-// var DME_LIST=[];
-// var reportsCount=0;
-// var rules_data =null, reports_data=null;
 var obj = {};
 var drugs_list = [];
-var matrix, nodes;
-var search_drug;
+var matrix=null, nodes =null;
+var search_drug=null;
 var filter_rb_val = 'both' ;
 var overall_data=null;
 var link_distance = 50;
@@ -25,7 +11,21 @@ var selected_interaction=null;
 var selected_Score = null;
 var menu_selection=null;
 var DME_LIST=[];
-var rules_data, reports_data, reportsCount;
+var reportsCount=0;
+var rules_data =null, reports_data=null;
+var obj = {};
+// var drugs_list = [];
+// var matrix, nodes;
+// var search_drug;
+// var filter_rb_val = 'both' ;
+// var overall_data=null;
+// var link_distance = 50;
+// var selected_node = null;
+// var selected_interaction=null;
+// var selected_Score = null;
+// var menu_selection=null;
+// var DME_LIST=[];
+// var rules_data, reports_data, reportsCount;
 var assigned_drugs= ['lansoprazole', 'byetta', 'ondansetron', 'omeprazole', 'fluororasil', 'metformin', 'abilify', 'victoza', 'zometa', 'furosemide','lantus', 'atorvastatin','humira', 'dexamethasone', 'simavastatin'];
 
 /*tooltip on mousover, used throughtout*/
@@ -46,7 +46,7 @@ function mouseOverText(event, text){
 
 d3.select("#reset_button")
     .on("click", function(){
-      console.log("clicked")
+    //   console.log("clicked")
       selected_drugs = [];
       d3.selectAll("#div_graph > svg").remove();
       d3.selectAll("#div_profile > svg").remove();
@@ -854,8 +854,6 @@ function prepare_profile(drugname, check){
     .on("mouseout", function(d){
             div.style("display", "none");
     });
-
-
 
 /*function to match ids for interaction as well as drugs if clicked on any ones*/
 function prepare_reports(d, check){
