@@ -923,7 +923,8 @@ function prepare_reports(d, check){
                         .append("td")
                         .text(function(d) { //console.log(d); 
                                 return d.value.toLowerCase(); 
-                        });
+                        })
+                        
 
 
          cells.style("width", function(d,i){
@@ -931,12 +932,19 @@ function prepare_reports(d, check){
               return "300px";
             }
          })
+         .on("mouseenter", function(d){
+            mouseOverText(event,d.value.toLowerCase())
+        }) 
+        .on("mouseleave", function(d,i){
+            div.style("display", "none");
+        });
+        
    
          rows.on("click", function(d){
-            d3.select(this).style("background-color", "#3182bd").style("color","#fff")
+            d3.select(this).style("background-color", "#70a7d3").style("color","#fff")
          }) 
          .on("mouseover", function(d){
-           d3.select(this).style("background-color", "#3182bd").style("color","#fff")
+           d3.select(this).style("background-color", "#70a7d3").style("color","#fff")
          }) 
          .on("mouseout", function(d,i){ //correct index is passed here!
             d3.select(this).style("color", "black")

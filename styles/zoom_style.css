@@ -65,7 +65,7 @@ text {
   overflow: scroll;
 }
 .report_table td{ 
-  padding:7px; border:#3182bd 1px solid;
+  padding:7px;
 
 }
 /*  Define the background color for all the ODD background rows  */
