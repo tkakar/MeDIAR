@@ -1,5 +1,5 @@
 # MeDIAR
-A web-based tool that allows the exploration of drug-drug interactions (DDIs) generated using association rule mining. The three views display the overview of all generated signals, a glyph representation for understanding the scores of respective rules or signals for each drug-drug interaction, where a single DDI can have multiple sets of reactions (rules), and the reports associated with a selected DDI.
+A web-based tool that allows the exploration of drug-drug interactions (DDIs) generated using association rule mining. The three views include an overview of all the machine-generated signals, a glyph representation for understanding the scores of respective signals for each drug-drug interaction, where a single DDI be associated with multiple sets of reactions (rules), and the reports associated with a selected DDI.
 
 ![Alt Text](/img/img.png)
 
