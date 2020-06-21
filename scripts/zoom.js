@@ -89,7 +89,7 @@ d3.selectAll("#drugs_menu").on("change",function(event) {
 /* WHEN MOUSE OVER ON THE DRUGS MENU, DISPLAY tooltip TEXT*/
 d3.selectAll("#drugs_menu")
     .on("mousemove",function(event) {
-        console.log("move")
+        // console.log("move")
         mouseOverText(event, "Select a drug to view its interactions (DIARs)")
     })
     /*WHEN MOUSE out then remove the tooltip text*/        
@@ -238,7 +238,7 @@ function set_data(data){
 
     var drugs_list_no_duplicates = remove_duplicates(drugs_list)
     drugs_list_no_duplicates.sort();
-// console.log(sel_overall, overall_data)
+//    console.log(overall_data)
 
     d3.selectAll("#drugs_menu")
         .selectAll("option")
@@ -250,6 +250,9 @@ function set_data(data){
 
     if (sel_overall){
         createAdjacencyMatrix (drugs_list_no_duplicates, JSON.parse(JSON.stringify(sel_overall)));
+    }
+    else if(overall_data){
+        createAdjacencyMatrix (drugs_list_no_duplicates, JSON.parse(JSON.stringify(overall_data)));
     }
          drugs_list=[];
 }
